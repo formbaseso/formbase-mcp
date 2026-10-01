@@ -2,19 +2,39 @@
 
 <img src="logo.png" alt="formbase logo" width="96" align="right">
 
-The hosted MCP server for [formbase.so](https://formbase.so). formbase collects and verifies information from customers for workflows and AI agents. Your agent creates a request for one person. That person, the recipient, gets a branded form with what you already know filled in, completes it on any device without an account, and formbase hands the answers back under field keys your agent can read. Over the same connection an agent can also build, publish, translate and share forms, and read their submissions.
+The hosted MCP server for [formbase.so](https://formbase.so). formbase collects and verifies information from customers for workflows and AI agents.
 
-This repository holds documentation and example configs only. There is nothing to install or run. The server lives at:
+Your agent creates a **request** for one person. That person, the **recipient**, gets a branded form with what you already know filled in. They complete it on any device, without an account. formbase hands the answers back under **field keys** your agent can read.
+
+The server lives at:
 
 ```text
 https://api.formbase.so/api/mcp
 ```
 
-It speaks MCP (the Model Context Protocol, the standard AI tools use to call other apps) over streamable HTTP. Most AI tools sign in with OAuth: you paste the URL, sign in to formbase in the browser, and pick a workspace. Scripts and headless agents send an API token instead.
+This repository holds documentation and example configs only. There is nothing to install or run.
+
+- [What an agent can do](#what-an-agent-can-do)
+- [Connect your AI tool](#connect-your-ai-tool)
+- [Try it](#try-it)
+- [Tools](#tools)
+- [Limits](#limits)
+- [Protocol details](#protocol-details)
+- [Docs](#docs)
+- [Report a problem](#report-a-problem)
+
+## What an agent can do
+
+- **Send requests.** Ask one named person for information, with answers filled in or locked, and read what they answered.
+- **Build forms.** Create a form and add, edit or remove its questions, pages and logic.
+- **Publish and share.** Publish a form, create share links, translate it, and set its theme and settings.
+- **Read results.** List a form's submissions and read its analytics.
+
+MCP (the Model Context Protocol) is the standard AI tools use to call other apps. Most AI tools sign in to formbase with OAuth: you paste the URL, sign in to formbase in the browser, and pick a workspace. Scripts and headless agents send an API token instead.
 
 ## Connect your AI tool
 
-Leave any client ID, secret or token field empty. The tool finds the formbase sign-in page from the server and registers itself.
+Leave any client ID, secret or token field empty. The AI tool finds the formbase sign-in page from the server and registers itself.
 
 ### Claude Code
 
@@ -24,7 +44,7 @@ claude mcp add --transport http formbase https://api.formbase.so/api/mcp
 
 Then type `/mcp` in Claude Code to sign in.
 
-To share the server with everyone who works on a project, commit a `.mcp.json` to the project instead (this repository has a copy: [`.mcp.json`](.mcp.json)):
+To share the server with everyone who works on a project, commit a [`.mcp.json`](.mcp.json) to the project instead:
 
 ```json
 {
@@ -37,13 +57,15 @@ To share the server with everyone who works on a project, commit a `.mcp.json` t
 }
 ```
 
-### Claude desktop (and claude.ai)
+### Claude desktop and claude.ai
 
-In Claude, open **Customize** › **Connectors** › **+** › **Add custom connector** and paste the URL. A connector added on claude.ai also works in the desktop and mobile apps. On Team and Enterprise, an owner adds it first under **Organization settings** › **Connectors**; on Free you can add one custom connector.
+Open **Customize** › **Connectors** › **+** › **Add custom connector** and paste the URL. A connector added on claude.ai also works in the desktop and mobile apps.
+
+On Team and Enterprise, an owner adds the connector first under **Organization settings** › **Connectors**. Members then click **Connect** on it. On Free you can add one custom connector. Claude's own guide: [Get started with custom connectors](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp).
 
 ### Cursor
 
-Add this to `.cursor/mcp.json` in your project, or to `~/.cursor/mcp.json` for every project (this repository has a copy: [`.cursor/mcp.json`](.cursor/mcp.json)):
+Add this to [`.cursor/mcp.json`](.cursor/mcp.json) in your project, or to `~/.cursor/mcp.json` for every project:
 
 ```json
 {
@@ -57,7 +79,20 @@ Add this to `.cursor/mcp.json` in your project, or to `~/.cursor/mcp.json` for e
 
 ### VS Code
 
-Run **MCP: Add Server** from the Command Palette, choose **HTTP**, and paste the URL. See [VS Code's MCP guide](https://code.visualstudio.com/docs/agent-customization/mcp-servers) for where it saves the server.
+Add this to [`.vscode/mcp.json`](.vscode/mcp.json) in your project. Note that VS Code names the top-level key `servers`:
+
+```json
+{
+  "servers": {
+    "formbase": {
+      "type": "http",
+      "url": "https://api.formbase.so/api/mcp"
+    }
+  }
+}
+```
+
+Or run **MCP: Add Server** from the Command Palette and paste the URL. See [VS Code's MCP guide](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
 ### Other tools
 
@@ -65,7 +100,9 @@ Any tool that supports remote MCP servers with sign-in works the same way: look 
 
 ### Sign in and pick a workspace
 
-The first time the agent uses formbase, your AI tool opens a formbase page in the browser. Sign in, pick the workspace, and click **Authorize**. The connection reaches that one workspace only. To use another workspace, add formbase a second time and pick the other one.
+The first time the agent uses formbase, your AI tool opens a formbase page in the browser. Sign in, pick the workspace, and click **Authorize**.
+
+A connection reaches that one workspace only. To use another workspace, add formbase a second time and pick the other one.
 
 To check that it works, ask:
 
@@ -73,11 +110,17 @@ To check that it works, ask:
 List my formbase forms and whether each one is published.
 ```
 
-To remove the connection, open **OAuth and API Keys** in the formbase workspace sidebar and click **Disconnect** next to it under **Connected apps**.
+To remove the connection, open **OAuth and API Keys** in the formbase workspace sidebar. Under **Connected apps**, click the trash icon next to the connection and confirm with **Disconnect**.
 
 ### Scripts and headless agents: use an API token
 
-A client that cannot open a browser, such as a script, a CI job or a headless agent, sends an API token as a header instead. Create one under **OAuth and API Keys** in your workspace sidebar ([API tokens](https://docs.formbase.so/developers/api-tokens/)). It starts with `fb_`. Keep it out of git.
+Anything that cannot open a browser, such as a script, a CI job or a headless agent, sends an API token as a header instead.
+
+1. Open **OAuth and API Keys** in your workspace sidebar and click **Create token** ([API tokens](https://docs.formbase.so/developers/api-tokens/)).
+2. Copy the token. It starts with `fb_`.
+3. Send it as an `Authorization: Bearer` header.
+
+A token reaches exactly one workspace, like an OAuth connection. It expires 30 days after you create it and cannot be extended, so plan to replace it. Keep it out of git.
 
 Claude Code, from the command line:
 
@@ -86,7 +129,7 @@ claude mcp add --transport http formbase https://api.formbase.so/api/mcp \
   --header "Authorization: Bearer fb_YOUR_TOKEN"
 ```
 
-Or in a project's `.mcp.json`:
+Or in a config file. This is `.mcp.json` for Claude Code; Cursor takes the same `headers` object in its `mcp.json`:
 
 ```json
 {
@@ -102,22 +145,7 @@ Or in a project's `.mcp.json`:
 }
 ```
 
-Cursor, in `.cursor/mcp.json` or `~/.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "formbase": {
-      "url": "https://api.formbase.so/api/mcp",
-      "headers": {
-        "Authorization": "Bearer fb_YOUR_TOKEN"
-      }
-    }
-  }
-}
-```
-
-Other clients take the same URL and header; see their documentation for where. A token reaches exactly one workspace, like an OAuth connection.
+Other tools take the same URL and header. See their documentation for where.
 
 ## Try it
 
@@ -127,83 +155,115 @@ Send a request to one person. Use the name of one of your published forms:
 Send a formbase request with the "Supplier onboarding" form to Ada Lovelace (ada@acme.example). Fill in the company name "Analytical Engines Ltd" and lock it so she cannot change it. Use supplier-2041 as the external ID. Don't email her; give me the link and I will send it myself.
 ```
 
-The agent reads the form's field keys with `fields_list`, creates the request with `request_create`, and gives you the link. The agent is not told when the recipient submits, so ask it later:
+The agent reads the form's field keys with `fields_list`, creates the request with `request_create`, and gives you the request link.
+
+If the form has **Send reminders** on, formbase still emails the recipient its scheduled reminders. To prevent that, also say _no reminders_.
+
+The agent is not told when the recipient submits, so ask it later:
 
 ```text
 Has the formbase request supplier-2041 been answered? Show me the answers.
 ```
 
-It calls `request_get` and shows the answers, keyed by field key. Step by step: [Send a request with an AI agent](https://docs.formbase.so/guides/ai-agents/send-a-request/) and [Build a form with an AI agent](https://docs.formbase.so/guides/ai-agents/build-a-form/).
+The agent finds the request by its external ID with `request_list`, then reads it with `request_get`. Once the request is completed, the answers come back keyed by field key.
+
+Step by step: [Send a request with an AI agent](https://docs.formbase.so/guides/ai-agents/send-a-request/) and [Build a form with an AI agent](https://docs.formbase.so/guides/ai-agents/build-a-form/).
 
 ## Tools
 
-Every tool is listed on `tools/list` when a client connects. Clients that load schemas on demand, like Claude Code, fetch a tool's full schema when a task needs it. `load_tools` returns fuller documentation for a catalog of tools, and `load_skill` loads a domain guide.
+Every tool is on `tools/list` with its full input schema as soon as an AI tool connects. The [MCP server reference](https://docs.formbase.so/developers/mcp-server/) describes them in detail.
 
-### Core tools
+### Requests
 
-The tools most tasks start with.
+Ask one named person for information and read the result.
 
-| Tool                                                                                              | What it does                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `form_list`                                                                                       | List forms in a workspace. Supports folder filter, fuzzy name search, and cursor pagination.                                                             |
-| `form_get`                                                                                        | Get full details for a form: questions, cover, logo, and a live preview URL.                                                                             |
-| `form_create`                                                                                     | Create a new empty form in a workspace. Returns a preview URL for live editing.                                                                          |
-| `form_update`                                                                                     | Update form metadata: name, folder, emoji, cover, or logo.                                                                                               |
-| `form_delete`                                                                                     | Move a form to the trash and revoke its share links.                                                                                                     |
-| `form_publish`                                                                                    | Publish a form so it can accept submissions. Safe to call twice.                                                                                         |
-| `workspace_list`                                                                                  | List all workspaces your token can reach.                                                                                                                |
-| `workspaceFolder_list`                                                                            | List folders in a workspace.                                                                                                                             |
-| `formSubmission_list`                                                                             | List a form's submissions, partial and completed, with pagination.                                                                                       |
-| `fields_list`                                                                                     | List the field keys a request can address on a published form, each with its value type, option keys, and a usage line. Call it before `request_create`. |
-| `request_create`                                                                                  | Assign a published form to one named recipient: prefill, locked fields, context, delivery, expiry, and an optional callback.                             |
-| `request_get`                                                                                     | Read one request: status, timeline, and, once completed, answers keyed by field key, plus display text.                                                  |
-| `request_list`                                                                                    | List requests for a form or a whole workspace, filtered by status, outcome, or your own external id.                                                     |
-| `editor_getDocument`                                                                              | Get the full structure of a form: all blocks, their types, and properties.                                                                               |
-| `editor_updateElement`                                                                            | Edit a block: replace its text, change properties (title, required and so on), or move it.                                                               |
-| `editor_deleteElement`                                                                            | Remove a block from the form.                                                                                                                            |
-| `editor_insertTextQuestion`                                                                       | Insert a short or long text question. Each question type has its own insert tool with a precise schema.                                                  |
-| `editor_insertContactQuestion`                                                                    | Insert an email, phone number, or website URL question.                                                                                                  |
-| `editor_insertNumberQuestion`, `editor_insertDateQuestion`                                        | Insert a number or date question.                                                                                                                        |
-| `editor_insertRadioQuestion`, `editor_insertCheckboxQuestion`, `editor_insertSelectQuestion`      | Insert a single-choice (radio), multiple-choice (checkbox), or dropdown question.                                                                        |
-| `editor_insertDecisionQuestion`                                                                   | Insert the decision question: the approve / decline / changes choice whose answer becomes a request outcome. A radio built by hand never produces one.   |
-| `editor_insertRatingQuestion`, `editor_insertLinearScaleQuestion`                                 | Insert a star rating or a linear scale question.                                                                                                         |
-| `editor_insertHeader`, `editor_insertParagraph`, `editor_insertImage`, `editor_insertPageDivider` | Insert content that is not a question: headings, paragraphs, images, and page dividers.                                                                  |
-| `load_tools`                                                                                      | Load documentation for a tool catalog: schemas and usage patterns for grouped tools.                                                                     |
-| `load_skill`                                                                                      | Load a domain guide (themes, question types, logic rules and more).                                                                                      |
+- `fields_list`: list the field keys a request can address on a published form. Call it before `request_create`.
+- `request_create`: assign a published form to one recipient, with prefill, locked fields, context, delivery, expiry and an optional callback.
+- `request_get`: read one request by its ID. Returns the status, the timeline and, once completed, the answers keyed by field key.
+- `request_list`: list requests for a form or a workspace, filtered by status, outcome or your own external ID.
+- `request_cancel`: withdraw a pending request.
+- `request_remind`: send the recipient a reminder email now.
+- `request_replayCallback`: send a callback again when it never reached your endpoint.
+- `document_create`: reserve an upload for a file a request hands to its recipient. One upload can serve any number of requests.
 
-### Tool catalogs
+### Forms
 
-These tools are on `tools/list` too. Run `load_tools` with a catalog name for fuller documentation, then call the tools directly.
+- `form_list`, `form_get`, `form_create`, `form_update`: find, read, create and rename forms, and set the folder, emoji, cover and logo.
+- `form_publish`, `form_unpublish`: start and stop accepting submissions. `form_publish` is safe to call twice.
+- `form_delete`, `form_restore`: move a form to the trash, which also revokes its share links, and bring it back.
 
-| Catalog                | Tools                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `form-data`            | `formAnalytics_get`: views, submissions, completion rate, and breakdowns by device, country, browser and source. Needs the Pro or Business plan; returns `UPGRADE_REQUIRED` otherwise.                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `form-appearance`      | `formTheme_get`, `formTheme_set`, `form_update`: light and dark themes, plus the cover and logo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `form-behavior`        | `formSettings_get`, `formSettings_update`: notification emails, completion redirect, password, retention, language, payment.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `form-sharing`         | `formShareLink_list`, `formShareLink_create`, `formShareLink_update`: share links, with custom domain support.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `form-translations`    | `translationLanguage_list`, `translationDraft_get`, `translationDraft_update`, `translationDraft_publish`, `translationLanguage_delete`: translate a form as a draft, then publish it.                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `form-lifecycle`       | `form_unpublish`, `form_restore`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `workspace-management` | `workspaceFolder_create`, `workspaceFolder_update`, `workspaceFolder_delete`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| `editor-actions`       | `editor_formatText`, `editor_setLogic`, `editor_testLogic`: text formatting, writing logic, and testing it.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `request-lifecycle`    | `fields_list`, `request_create`, `request_get`, `request_list`, `request_cancel`, `request_remind`, `request_replayCallback`, `document_create`: the whole request surface. Withdraw a pending request, send the recipient a reminder, replay a callback that never landed, and reserve an upload for a document you hand to one recipient.                                                                                                                                                                                                                                                          |
-| `editor-inserts`       | The other insert tools: `editor_insertTimeQuestion`, `editor_insertSwitchQuestion`, `editor_insertFileQuestion`, `editor_insertSignatureQuestion`, `editor_insertDocumentsBlock`, `editor_insertMatrixQuestion`, `editor_insertRankingQuestion`, `editor_insertPaymentQuestion`, `editor_insertScheduleAppointmentQuestion`, `editor_insertPictureChoiceQuestion`, `editor_insertEmbedded`, `editor_insertTable`, `editor_insertList`, `editor_insertRow`, `editor_insertCalculatedField`, `editor_insertHiddenField`, `editor_insertRepeatingGroup`, `editor_insertLogic`, `editor_insertVariable`. |
+`form_get` returns the questions of the last published version. For a draft, read the content with `editor_getDocument`.
 
-### Skills, resources and prompts
+### Editor
 
-Skills are built-in guides an agent loads with `load_skill`: `question-types`, `logic-rules`, `editing-flows`, `form-best-practices`, `form-themes`, `form-settings`, `analytics`, `toon-format`, and `requests` (field keys, prefill value shapes, delivery, per-request documents, callbacks, polling, and error recovery).
+- `editor_getDocument`: read the full structure of a form.
+- `editor_updateElement`, `editor_deleteElement`: edit, move or remove a block.
+- `editor_formatText`: format text inside a block.
+- `editor_setLogic`, `editor_testLogic`: change the rule of a logic block and test it. Create the block with `editor_insertLogic`.
 
-Every skill and tool catalog is also an MCP resource at `skill://<name>`, such as `skill://requests`. The server also serves three prompts: `identity`, `editor_tools`, and `data_tools`.
+Each block type has its own insert tool with a precise schema:
+
+- **Questions:** `editor_insertTextQuestion`, `editor_insertContactQuestion`, `editor_insertNumberQuestion`, `editor_insertDateQuestion`, `editor_insertTimeQuestion`, `editor_insertRadioQuestion`, `editor_insertCheckboxQuestion`, `editor_insertSelectQuestion`, `editor_insertPictureChoiceQuestion`, `editor_insertSwitchQuestion`, `editor_insertRatingQuestion`, `editor_insertLinearScaleQuestion`, `editor_insertRankingQuestion`, `editor_insertMatrixQuestion`, `editor_insertFileQuestion`, `editor_insertSignatureQuestion`, `editor_insertPaymentQuestion`, `editor_insertScheduleAppointmentQuestion`
+- **Decision:** `editor_insertDecisionQuestion` inserts the approve / decline / changes choice whose answer becomes the request outcome. A radio question built by hand never produces one.
+- **Content:** `editor_insertHeader`, `editor_insertParagraph`, `editor_insertImage`, `editor_insertList`, `editor_insertTable`, `editor_insertRow`, `editor_insertEmbedded`, `editor_insertPageDivider`, `editor_insertDocumentsBlock`
+- **Data and logic:** `editor_insertHiddenField`, `editor_insertCalculatedField`, `editor_insertVariable`, `editor_insertRepeatingGroup`, `editor_insertLogic`
+
+### Sharing and results
+
+- `formShareLink_list`, `formShareLink_create`, `formShareLink_update`: manage share links, also on a custom domain.
+- `formSubmission_list`: list a form's submissions, partial and completed.
+- `formAnalytics_get`: views, submissions, completion rate, and breakdowns by device, country, browser and source.
+
+### Appearance, settings and translations
+
+- `formTheme_get`, `formTheme_set`: light and dark themes.
+- `formSettings_get`, `formSettings_update`: notification emails, completion redirect, password, retention and language.
+- `translationLanguage_list`, `translationDraft_get`, `translationDraft_update`, `translationDraft_publish`, `translationLanguage_delete`: translate a form as a draft, then publish it.
+
+### Workspace
+
+- `workspace_list`: the one workspace your connection reaches, with its ID.
+- `workspaceFolder_list`, `workspaceFolder_create`, `workspaceFolder_update`, `workspaceFolder_delete`: manage folders.
+
+### Built-in guides
+
+Two tools return documentation instead of doing work:
+
+- `load_skill` loads a guide on one topic: `requests`, `question-types`, `logic-rules`, `editing-flows`, `form-best-practices`, `form-themes`, `form-settings`, `analytics` or `toon-format`.
+- `load_tools` loads usage notes for a group of tools, called a catalog: `request-lifecycle`, `editor-inserts`, `editor-actions`, `form-lifecycle`, `form-appearance`, `form-behavior`, `form-sharing`, `form-translations`, `form-data` or `workspace-management`.
+
+Every guide and catalog is also an MCP resource at `skill://<name>`, such as `skill://requests`. The server also serves four prompts: `identity`, `capabilities`, `data_tools` and `editor_tools`.
 
 ### Tools that ask first
 
-These tools are marked destructive, because undoing them takes another call or is not possible: `form_delete`, `form_unpublish`, `workspaceFolder_delete`, `editor_deleteElement`, `translationLanguage_delete`, and `request_cancel`. Most AI tools ask you before running them. The prompt comes from your AI tool, so check its approval settings if you need a hard stop.
+Six tools are marked destructive, because undoing them takes another call or is not possible: `form_delete`, `form_unpublish`, `workspaceFolder_delete`, `editor_deleteElement`, `translationLanguage_delete` and `request_cancel`. Most AI tools ask you before running them. The prompt comes from your AI tool, so check its approval settings if you need a hard stop.
+
+Two actions cannot be undone:
+
+- `workspaceFolder_delete` permanently deletes the folder, its subfolders and every form inside.
+- `formShareLink_update` with `revoked: true` permanently disables a share link. This tool is not marked destructive, so your AI tool may not ask first.
 
 ## Limits
 
-- **Rate limit.** 120 tool calls per minute per token, shared with the [REST API](https://docs.formbase.so/developers/rest-api/). Only `tools/call` counts. Over the limit, the call returns a failed tool result with `RATE_LIMITED` and a `retryAfterMs`.
-- **Monthly allowance.** Each `request_create` spends one unit of your workspace's monthly allowance, whether or not the recipient ever answers.
-- **No file uploads through a tool call.** Images are set by URL. A document for one recipient is the exception: `document_create` returns an upload URL you `PUT` the file to.
-- **No workspace AI skills.** Skills you write in formbase only work in formbase's built-in AI chat. The server's own skills (`load_skill`) work over MCP.
+- **Rate limit.** 120 tool calls per minute per token, shared with the [REST API](https://docs.formbase.so/developers/rest-api/). Only `tools/call` counts. Over the limit, the call returns a failed tool result with `RATE_LIMITED` and a `retryAfterMs`. `request_create` and `document_create` also share a second limit of 60 calls per minute per token.
+- **Monthly allowance.** Each `request_create` spends one unit of the monthly allowance of the workspace owner's plan, whether or not the recipient ever answers. A test request (`test: true`) spends nothing. When the allowance is spent, `request_create` fails with `MONTHLY_ALLOWANCE_REACHED`.
+- **Paid plans.** Emailing a recipient (the invitation and reminders) and `formAnalytics_get` need the Pro or Business plan. See [plans and pricing](https://docs.formbase.so/subscription-billing/plans-pricing/).
+- **No notification when a recipient submits.** The server never calls your agent. Ask again later, or pass a `callbackUrl` to `request_create` so formbase calls your endpoint ([callbacks](https://docs.formbase.so/requests/callbacks/)).
+- **No file uploads through a tool call.** Images are set by URL: an `http(s)://` URL or a `data:image` URI. A document for a request is the exception: `document_create` returns an upload URL you `PUT` the file to within one hour. PDF and images only, 25 MB per file.
+- **No workspace AI skills.** Skills you write in formbase only work in formbase's built-in AI chat. The server's own guides (`load_skill`) work over MCP.
+
+## Protocol details
+
+For anyone who writes their own MCP client or debugs a connection.
+
+- **Transport.** Streamable HTTP, `POST` only. Every response is JSON. There is no event stream and no session ID, so each call stands alone. As the MCP spec requires, send `Content-Type: application/json` and `Accept: application/json, text/event-stream`.
+- **Protocol version.** `2025-11-25`.
+- **Sign-in.** Every call needs `Authorization: Bearer <token>`, `initialize` included. Without one, the server answers `401` with a `WWW-Authenticate` header that points to `https://api.formbase.so/.well-known/oauth-protected-resource`. From there a client finds the OAuth 2.1 server, which requires PKCE (S256) and supports dynamic client registration. The [reference](https://docs.formbase.so/developers/mcp-server/#oauth) lists each step.
+- **Tokens.** Both kinds reach one workspace and the same tools.
+  - An API token starts with `fb_` and lasts 30 days from creation.
+  - An OAuth access token starts with `fbo_` and lasts 1 hour. Your AI tool renews it with a refresh token, which lasts 30 days and is replaced on every use.
+- **Results.** A tool result is one text item that holds JSON. A failure has `success: false` and an `error` message. Request tools add a reason code such as `UNKNOWN_FIELD_KEY` under `details`, and a `suggestion` that says how to fix the call. [Troubleshooting requests](https://docs.formbase.so/requests/troubleshooting/) explains the common ones.
+- **Browsers.** The server allows cross-origin calls from formbase's own sites only, so a web page on another origin cannot call it directly.
 
 ## Docs
 
@@ -220,7 +280,9 @@ These tools are marked destructive, because undoing them takes another call or i
 - Email [support@formbase.so](mailto:support@formbase.so).
 - Or [open an issue](https://github.com/formbaseso/formbase-mcp/issues/new/choose) in this repository. Say which AI tool you use, how it signs in, the tool it called, and the error it got back.
 
-Issues are public. Never paste a token (`fb_...` or `fbo_...`) or your customers' answers into one; email us instead.
+Issues are public. Never paste a token (`fb_...` or `fbo_...`) or a recipient's answers into one; email us instead. To report a security problem, see [SECURITY.md](SECURITY.md).
+
+Fixes to these docs are welcome as pull requests.
 
 ## License
 

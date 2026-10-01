@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting this. Never paste an API token (`fb_...`), an OAuth token (`fbo_...`) or your customers' answers here: issues are public. For anything private, email support@formbase.so instead.
+        Thanks for reporting this. Never paste an API token (`fb_...`), an OAuth token (`fbo_...`) or a recipient's answers here: issues are public. For anything private, or for a security problem, email support@formbase.so instead.
   - type: dropdown
     id: client
     attributes:
@@ -14,7 +14,7 @@ body:
       description: Which tool was connected to formbase?
       options:
         - Claude Code
-        - Claude (web, desktop or mobile)
+        - Claude desktop or claude.ai
         - Cursor
         - VS Code
         - ChatGPT

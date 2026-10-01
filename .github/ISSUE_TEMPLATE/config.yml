@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security problem
+    url: https://github.com/formbaseso/formbase-mcp/security/policy
+    about: Report it by email, never in a public issue.
+  - name: Something private or about your account
+    url: https://github.com/formbaseso/formbase-mcp#report-a-problem
+    about: Email support@formbase.so. Issues are public.
+  - name: Docs
+    url: https://docs.formbase.so/developers/mcp-server/
+    about: The MCP server reference, with every tool and limit.
