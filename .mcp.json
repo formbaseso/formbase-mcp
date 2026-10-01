@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "formbase": {
+      "type": "http",
+      "url": "https://api.formbase.so/api/mcp"
+    }
+  }
+}

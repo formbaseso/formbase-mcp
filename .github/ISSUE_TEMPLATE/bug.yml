@@ -1,0 +1,55 @@
+name: Bug report
+description: Something in the formbase MCP server does not work the way the docs say.
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. Never paste an API token (`fb_...`), an OAuth token (`fbo_...`) or your customers' answers here: issues are public. For anything private, email support@formbase.so instead.
+  - type: dropdown
+    id: client
+    attributes:
+      label: AI tool
+      description: Which tool was connected to formbase?
+      options:
+        - Claude Code
+        - Claude (web, desktop or mobile)
+        - Cursor
+        - VS Code
+        - ChatGPT
+        - Codex
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: sign-in
+    attributes:
+      label: How it signs in
+      options:
+        - OAuth (signed in through the browser)
+        - API token in a header
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you asked the agent, which tool it called, and the error code or message it got back.
+      placeholder: |
+        I asked: "Send the onboarding form to ada@example.com"
+        The agent called request_create and got: VALIDATION_ERROR ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: when
+    attributes:
+      label: When it happened
+      description: Date, time and time zone, so we can find it in our logs.
+      placeholder: 2026-09-28 14:05 CEST

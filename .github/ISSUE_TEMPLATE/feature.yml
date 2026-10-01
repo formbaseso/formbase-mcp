@@ -1,0 +1,23 @@
+name: Feature request
+description: Ask for a new tool, a new option or a change to the formbase MCP server.
+title: '[Feature]: '
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: What do you want your agent to do?
+      description: Describe the task, not the solution. What is the workflow or agent trying to get done?
+      placeholder: My agent asks new customers for their company details and needs to send the same request to many people at once.
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: What do you do today?
+      description: The workaround you use now, if you have one.
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: A tool, an argument or a change you think would help. Optional.
