@@ -1,0 +1,13 @@
+{
+  "name": "formbase",
+  "version": "1.0.0",
+  "description": "formbase.so collects and verifies information from customers for workflows and AI agents.",
+  "author": {
+    "name": "formbase",
+    "url": "https://formbase.so"
+  },
+  "homepage": "https://formbase.so",
+  "repository": "https://github.com/formbaseso/formbase-mcp",
+  "license": "MIT",
+  "keywords": ["formbase", "requests", "forms", "customer", "verification"]
+}

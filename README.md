@@ -12,7 +12,7 @@ The server lives at:
 https://api.formbase.so/api/mcp
 ```
 
-This repository holds documentation and example configs only. There is nothing to install or run.
+This repository holds documentation, example configs and a Grok Build plugin manifest. There is nothing to install or run.
 
 - [What an agent can do](#what-an-agent-can-do)
 - [Connect your AI tool](#connect-your-ai-tool)
@@ -93,6 +93,10 @@ Add this to [`.vscode/mcp.json`](.vscode/mcp.json) in your project. Note that VS
 ```
 
 Or run **MCP: Add Server** from the Command Palette and paste the URL. See [VS Code's MCP guide](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
+
+### Grok Build
+
+This repository is also a Grok Build plugin: [`.grok-plugin/plugin.json`](.grok-plugin/plugin.json), the [`.mcp.json`](.mcp.json) server config and one skill, [`formbase-requests`](skills/formbase-requests/SKILL.md). The plugin runs nothing on your machine. It calls one network endpoint, `https://api.formbase.so/api/mcp`, and signs in with formbase OAuth, or with an API token you add as a header.
 
 ### Other tools
 
