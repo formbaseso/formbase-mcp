@@ -94,6 +94,26 @@ Add this to [`.vscode/mcp.json`](.vscode/mcp.json) in your project. Note that VS
 
 Or run **MCP: Add Server** from the Command Palette and paste the URL. See [VS Code's MCP guide](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
+### Cline
+
+Cline connects with an API token (see [below](#scripts-and-headless-agents-use-an-api-token) for how to create one). Add this to Cline's `cline_mcp_settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "formbase": {
+      "type": "streamableHttp",
+      "url": "https://api.formbase.so/api/mcp",
+      "headers": {
+        "Authorization": "Bearer fb_YOUR_TOKEN"
+      }
+    }
+  }
+}
+```
+
+Or ask Cline to install it: [`llms-install.md`](llms-install.md) has the steps it follows.
+
 ### Grok Build
 
 This repository is also a Grok Build plugin: [`.grok-plugin/plugin.json`](.grok-plugin/plugin.json), the [`.mcp.json`](.mcp.json) server config and one skill, [`formbase-requests`](skills/formbase-requests/SKILL.md). The plugin runs nothing on your machine. It calls one network endpoint, `https://api.formbase.so/api/mcp`, and signs in with formbase OAuth, or with an API token you add as a header.
