@@ -1,7 +1,7 @@
 {
   "name": "formbase",
-  "version": "1.0.0",
-  "description": "formbase.so collects and verifies information from customers for workflows and AI agents.",
+  "version": "1.0.1",
+  "description": "Collect verified customer information for workflows and AI agents.",
   "author": {
     "name": "formbase",
     "url": "https://formbase.so"

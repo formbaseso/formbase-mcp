@@ -1,6 +1,6 @@
 ---
 name: formbase-requests
-description: Ask a customer for information through formbase (formbase.so) and read the verified answers back. Use when a workflow or AI agent needs a confirmation, a document, a signature or missing details from one named person.
+description: Ask a customer for information through formbase and read the verified answers back. Use when a workflow or AI agent needs a confirmation, a document, a signature or missing details from one named person.
 ---
 
 # formbase requests

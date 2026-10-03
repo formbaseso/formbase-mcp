@@ -2,9 +2,9 @@
 
 <img src="logo.png" alt="formbase logo" width="96" align="right">
 
-The hosted MCP server for [formbase.so](https://formbase.so). formbase collects and verifies information from customers for workflows and AI agents.
+The hosted MCP server for [formbase](https://formbase.so). Collect verified customer information for workflows and AI agents.
 
-Your agent creates a **request** for one person. That person, the **recipient**, gets a branded form with what you already know filled in. They complete it on any device, without an account. formbase hands the answers back under **field keys** your agent can read.
+Your agent sends a **request** to one customer, the **recipient**: a form in your brand and their language, prefilled with what you know, so they only confirm or correct it. They upload files, sign, book or pay on the same page, without an account. The answers come back as data under your **field keys**, with your ID and an approve, decline or changes outcome. Your agent reads them whenever it checks, or a workflow gets a signed callback the moment the customer submits.
 
 The server lives at:
 

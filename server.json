@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.formbaseso/formbase-mcp",
   "title": "formbase",
-  "description": "formbase.so collects and verifies information from customers for workflows and AI agents",
-  "version": "1.0.0",
+  "description": "Collect verified customer information for workflows and AI agents",
+  "version": "1.0.1",
   "websiteUrl": "https://formbase.so",
   "repository": {
     "url": "https://github.com/formbaseso/formbase-mcp",
