@@ -65,9 +65,9 @@ On Team and Enterprise, an owner adds the connector first under **Organization s
 
 ### ChatGPT
 
-Turn on developer mode under **Settings** › **Apps** › **Advanced settings**. Then click **Create app**, paste the URL and leave authentication on OAuth.
+Turn on developer mode under **Settings** › **Apps** › **Advanced settings**. Then open **Settings** › **Apps** › **Create**, paste the URL, choose OAuth, click **Scan Tools**, sign in to formbase, and click **Create**.
 
-Tools that change something, such as sending a request or editing a form, need ChatGPT Business, Enterprise or Edu, on the web. On Business, an admin creates the app under **Workspace settings** › **Apps** › **Create**. OpenAI's own guide: [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
+Developer mode works on the web only. On Pro, ChatGPT can only read: tools that change something, such as sending a request or editing a form, need Business, Enterprise or Edu. On Business, only admins and owners can use developer mode. OpenAI's own guide: [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
 
 ### Codex
 
