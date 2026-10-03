@@ -2,9 +2,9 @@
 
 <img src="logo.png" alt="formbase logo" width="96" align="right">
 
-The hosted MCP server for [formbase](https://formbase.so). Collect verified customer information for workflows and AI agents.
+The hosted MCP server for [formbase](https://formbase.so). Collect verified customer information with one request.
 
-Your agent sends a **request** to one customer, the **recipient**: a form in your brand and their language, prefilled with what you know, so they only confirm or correct it. They upload files, sign, book or pay on the same page, without an account. The answers come back as data under your **field keys**, with your ID and an approve, decline or changes outcome. Your agent reads them whenever it checks, or a workflow gets a signed callback the moment the customer submits.
+Your agent sends a **request** to one customer, the **recipient**: a form in your brand and their language, prefilled with what you know, so they only confirm or correct it. They upload files, sign, book or pay on the same page, without an account. The answers come back under your **field keys**, with your external ID and, when the form has a decision question, an approve, decline or changes outcome. Your agent reads them with `request_get`, or formbase calls your callback URL the moment the recipient submits.
 
 The server lives at:
 
@@ -30,7 +30,7 @@ This repository holds documentation, example configs and a Grok Build plugin man
 - **Publish and share.** Publish a form, create share links, translate it, and set its theme and settings.
 - **Read results.** List a form's submissions and read its analytics.
 
-MCP (the Model Context Protocol) is the standard AI tools use to call other apps. Most AI tools sign in to formbase with OAuth: you paste the URL, sign in to formbase in the browser, and pick a workspace. Scripts and headless agents send an API token instead.
+Most AI tools sign in to formbase with OAuth: you paste the URL, sign in to formbase in the browser, and pick a workspace. Scripts and headless agents send an API token instead.
 
 ## Connect your AI tool
 
@@ -63,6 +63,21 @@ Open **Customize** › **Connectors** › **+** › **Add custom connector** and
 
 On Team and Enterprise, an owner adds the connector first under **Organization settings** › **Connectors**. Members then click **Connect** on it. On Free you can add one custom connector. Claude's own guide: [Get started with custom connectors](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp).
 
+### ChatGPT
+
+Turn on developer mode under **Settings** › **Apps** › **Advanced settings**. Then click **Create app**, paste the URL and leave authentication on OAuth.
+
+Tools that change something, such as sending a request or editing a form, need ChatGPT Business, Enterprise or Edu, on the web. On Business, an admin creates the app under **Workspace settings** › **Apps** › **Create**. OpenAI's own guide: [Developer mode and MCP apps in ChatGPT](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
+
+### Codex
+
+```bash
+codex mcp add formbase --url https://api.formbase.so/api/mcp
+codex mcp login formbase
+```
+
+The second command opens the formbase sign-in page.
+
 ### Cursor
 
 Add this to [`.cursor/mcp.json`](.cursor/mcp.json) in your project, or to `~/.cursor/mcp.json` for every project:
@@ -76,23 +91,6 @@ Add this to [`.cursor/mcp.json`](.cursor/mcp.json) in your project, or to `~/.cu
   }
 }
 ```
-
-### VS Code
-
-Add this to [`.vscode/mcp.json`](.vscode/mcp.json) in your project. Note that VS Code names the top-level key `servers`:
-
-```json
-{
-  "servers": {
-    "formbase": {
-      "type": "http",
-      "url": "https://api.formbase.so/api/mcp"
-    }
-  }
-}
-```
-
-Or run **MCP: Add Server** from the Command Palette and paste the URL. See [VS Code's MCP guide](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
 ### Cline
 
@@ -120,7 +118,7 @@ This repository is also a Grok Build plugin: [`.grok-plugin/plugin.json`](.grok-
 
 ### Other tools
 
-Any tool that supports remote MCP servers with sign-in works the same way: look for where it adds a server by URL. The [connect guide](https://docs.formbase.so/guides/ai-agents/connect/) also covers ChatGPT and Codex.
+Any tool that supports remote MCP servers with sign-in works the same way: look for where it adds a server by URL. The [connect guide](https://docs.formbase.so/guides/ai-agents/connect/) links each tool's own instructions.
 
 ### Sign in and pick a workspace
 
@@ -176,7 +174,7 @@ Other tools take the same URL and header. See their documentation for where.
 Send a request to one person. Use the name of one of your published forms:
 
 ```text
-Send a formbase request with the "Supplier onboarding" form to Ada Lovelace (ada@acme.example). Fill in the company name "Analytical Engines Ltd" and lock it so she cannot change it. Use supplier-2041 as the external ID. Don't email her; give me the link and I will send it myself.
+Send a formbase request with the "Supplier onboarding" form to Ada Lovelace (ada@acme.example). Fill in the company name "Analytical Engines Ltd" and lock it so it cannot be changed. Use supplier-2041 as the external ID. Don't send the invitation email; give me the link and I will send it myself.
 ```
 
 The agent reads the form's field keys with `fields_list`, creates the request with `request_create`, and gives you the request link.

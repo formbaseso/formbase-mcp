@@ -1,8 +1,8 @@
 {
   "identifier": "formbaseso-formbase-mcp",
   "name": "formbase",
-  "version": "1.0.1",
-  "description": "Collect verified customer information for workflows and AI agents. One request sends a branded, prefilled form; the customer confirms or corrects the answers.",
+  "version": "1.0.2",
+  "description": "Collect verified customer information with one request. The customer confirms or corrects a branded, prefilled form; answers come back under your field keys.",
   "homepage": "https://formbase.so",
   "cloudEndpoint": "https://api.formbase.so/api/mcp",
   "tags": [
